@@ -1,6 +1,7 @@
 export type Color = {
   hex: string;
   name?: string;
+  role?: string;
 };
 
 export type Palette = {
