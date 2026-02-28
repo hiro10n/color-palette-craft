@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import HeaderV2 from "@/components/improved/HeaderV2";
 import InputAreaV2 from "@/components/improved/InputAreaV2";
 import ResultAreaV2 from "@/components/improved/ResultAreaV2";
 import HistoryAreaV2 from "@/components/improved/HistoryAreaV2";
-import Toast from "@/components/Toast";
 import { Color, Palette } from "@/types";
 import { savePalette, loadPalettes, deletePalette } from "@/lib/storage";
 
@@ -17,15 +17,9 @@ export default function ImprovedHome() {
   }>({});
   const [palettes, setPalettes] = useState<Palette[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [toast, setToast] = useState({ message: "", visible: false });
 
   useEffect(() => {
     setPalettes(loadPalettes());
-  }, []);
-
-  const showToast = useCallback((message: string) => {
-    setToast({ message, visible: true });
-    setTimeout(() => setToast({ message: "", visible: false }), 2500);
   }, []);
 
   async function handleGenerate(params: {
@@ -42,13 +36,13 @@ export default function ImprovedHome() {
       });
       if (!res.ok) {
         const err = await res.json();
-        showToast(err.error || "生成に失敗しました");
+        toast.error(err.error || "生成に失敗しました");
         return;
       }
       const data = await res.json();
       setColors(data.colors);
     } catch {
-      showToast("ネットワークエラーが発生しました");
+      toast.error("ネットワークエラーが発生しました");
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +59,7 @@ export default function ImprovedHome() {
     };
     savePalette(palette);
     setPalettes(loadPalettes());
-    showToast("パレットを保存しました");
+    toast.success("パレットを保存しました");
   }
 
   function handleDelete(id: string) {
@@ -75,7 +69,7 @@ export default function ImprovedHome() {
 
   function handleCopy(hex: string) {
     navigator.clipboard.writeText(hex);
-    showToast(`${hex} をコピーしました`);
+    toast(`${hex} をコピーしました`);
   }
 
   function handleLoad(palette: Palette) {
@@ -84,7 +78,7 @@ export default function ImprovedHome() {
       keyword: palette.keyword,
       baseColor: palette.baseColor,
     });
-    showToast("パレットを読み込みました");
+    toast("パレットを読み込みました");
   }
 
   return (
@@ -96,7 +90,7 @@ export default function ImprovedHome() {
           colors={colors}
           onCopy={handleCopy}
           onSave={handleSave}
-          onToast={showToast}
+          onToast={(msg) => toast(msg)}
         />
         <HistoryAreaV2
           palettes={palettes}
@@ -105,7 +99,6 @@ export default function ImprovedHome() {
           onLoad={handleLoad}
         />
       </main>
-      <Toast message={toast.message} visible={toast.visible} />
     </div>
   );
 }

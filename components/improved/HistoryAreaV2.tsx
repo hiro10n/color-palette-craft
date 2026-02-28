@@ -2,6 +2,17 @@
 
 import { useState } from "react";
 import { Palette } from "@/types";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type Props = {
   palettes: Palette[];
@@ -51,20 +62,24 @@ export default function HistoryAreaV2({ palettes, onDelete, onCopy, onLoad }: Pr
                 </div>
 
                 {/* Actions — visible on hover */}
-                <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
+                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs text-primary"
                     onClick={() => onLoad(palette)}
-                    className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
                   >
                     読み込む
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-xs text-muted-foreground hover:text-destructive"
                     onClick={() => setConfirmId(palette.id)}
-                    className="text-xs text-gray-400 hover:text-red-500 transition-colors font-medium"
                     aria-label="削除"
                   >
                     削除
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -86,42 +101,29 @@ export default function HistoryAreaV2({ palettes, onDelete, onCopy, onLoad }: Pr
         </div>
       </div>
 
-      {/* Delete confirmation modal */}
-      {confirmId && (
-        <div
-          className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4"
-          onClick={() => setConfirmId(null)}
-        >
-          <div
-            className="bg-white rounded-2xl p-6 shadow-xl max-w-sm w-full"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-base font-semibold text-gray-900 mb-1.5">
-              パレットを削除しますか？
-            </h3>
-            <p className="text-sm text-gray-500 mb-5">
+      {/* Delete confirmation — shadcn AlertDialog */}
+      <AlertDialog open={!!confirmId} onOpenChange={(open) => !open && setConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>パレットを削除しますか？</AlertDialogTitle>
+            <AlertDialogDescription>
               この操作は元に戻せません。
-            </p>
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => setConfirmId(null)}
-                className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                キャンセル
-              </button>
-              <button
-                onClick={() => {
-                  onDelete(confirmId);
-                  setConfirmId(null);
-                }}
-                className="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
-              >
-                削除する
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>キャンセル</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-white hover:bg-destructive/90"
+              onClick={() => {
+                if (confirmId) onDelete(confirmId);
+                setConfirmId(null);
+              }}
+            >
+              削除する
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

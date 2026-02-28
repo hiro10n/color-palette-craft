@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Color } from "@/types";
 import { contrastRatio, wcagLevel, bestTextColor, WcagLevel } from "@/lib/contrast";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 type Props = {
   color: Color;
@@ -32,7 +34,7 @@ export default function ColorSwatchV2({ color, onCopy }: Props) {
         onClick={() => onCopy(color.hex)}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-black/5 transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+        className="relative w-full aspect-4/3 rounded-xl overflow-hidden border border-black/5 transition-shadow hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         style={{ backgroundColor: color.hex }}
         aria-label={`${color.hex} をコピー`}
       >
@@ -68,11 +70,11 @@ export default function ColorSwatchV2({ color, onCopy }: Props) {
         <p className="text-xs font-mono text-gray-500 truncate">
           {color.hex}
         </p>
-        <span
-          className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${LEVEL_STYLES[level]}`}
+        <Badge
+          className={cn("text-[10px] font-semibold border-0", LEVEL_STYLES[level])}
         >
           {level} {bestContrast.toFixed(1)}:1
-        </span>
+        </Badge>
       </div>
     </div>
   );

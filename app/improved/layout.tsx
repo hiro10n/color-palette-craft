@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -10,5 +11,10 @@ export default function ImprovedLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className={inter.className}>{children}</div>;
+  return (
+    <div className={inter.className}>
+      {children}
+      <Toaster position="bottom-center" />
+    </div>
+  );
 }
