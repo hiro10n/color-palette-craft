@@ -6,8 +6,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "カラーパレット生成",
-  description: "キーワードやベースカラーからカラーパレットを自動生成するツール",
+  title: "Color Palette Generator",
+  description: "Automatically generate color palettes from keywords or base colors",
 };
 
 export default function RootLayout({
