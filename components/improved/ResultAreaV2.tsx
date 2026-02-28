@@ -46,7 +46,7 @@ export default function ResultAreaV2({ colors, onCopy, onSave, onToast }: Props)
           {DEMO_HEXES.map((hex, i) => (
             <div key={i} className="flex flex-col gap-2">
               <div
-                className="w-full aspect-[4/3] rounded-xl"
+                className="w-full aspect-4/3 rounded-xl"
                 style={{ backgroundColor: hex }}
               />
               <div className="h-2.5 bg-gray-300 rounded w-3/4" />
