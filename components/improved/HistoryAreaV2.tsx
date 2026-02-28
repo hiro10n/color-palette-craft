@@ -43,7 +43,7 @@ export default function HistoryAreaV2({ palettes, onDelete, onCopy, onLoad }: Pr
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2 flex-wrap">
                   {palette.keyword && (
-                    <span className="bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-full text-xs font-medium">
+                    <span className="bg-gray-100 text-gray-600 px-2.5 py-0.5 rounded-full text-xs font-medium">
                       {palette.keyword}
                     </span>
                   )}
