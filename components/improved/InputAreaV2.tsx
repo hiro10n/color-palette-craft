@@ -88,7 +88,7 @@ export default function InputAreaV2({ onGenerate, isLoading }: Props) {
               type="color"
               value={baseColor}
               onChange={(e) => handleColorPickerChange(e.target.value)}
-              className="w-12 h-12 rounded-xl cursor-pointer border border-gray-200 bg-transparent p-1 flex-shrink-0"
+              className="w-12 h-12 rounded-xl cursor-pointer border border-gray-200 bg-transparent p-1 shrink-0"
               aria-label="カラーピッカー"
             />
             <Input

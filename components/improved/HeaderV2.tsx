@@ -11,11 +11,8 @@ export default function HeaderV2() {
         </div>
         <div>
           <h1 className="text-base font-semibold text-gray-900 leading-tight">
-            カラーパレット生成
+            Color Palette Generator
           </h1>
-          <p className="text-xs text-gray-400 mt-0.5">
-            実務で使えるトーナルパレットを自動生成
-          </p>
         </div>
       </div>
     </header>
