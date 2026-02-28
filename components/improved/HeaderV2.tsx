@@ -2,7 +2,7 @@ export default function HeaderV2() {
   return (
     <header className="bg-white border-b border-gray-100 py-4 px-6">
       <div className="max-w-3xl mx-auto flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-sm">
+        <div className="w-9 h-9 rounded-xl bg-gray-900 flex items-center justify-center shrink-0">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
             <circle cx="6"  cy="6"  r="4" fill="white" fillOpacity="1"   />
             <circle cx="12" cy="6"  r="4" fill="white" fillOpacity="0.65"/>

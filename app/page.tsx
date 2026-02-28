@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Header from "@/components/Header";
-import InputArea from "@/components/InputArea";
-import ResultArea from "@/components/ResultArea";
-import HistoryArea from "@/components/HistoryArea";
-import Toast from "@/components/Toast";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import HeaderV2 from "@/components/improved/HeaderV2";
+import InputAreaV2 from "@/components/improved/InputAreaV2";
+import ResultAreaV2 from "@/components/improved/ResultAreaV2";
+import HistoryAreaV2 from "@/components/improved/HistoryAreaV2";
 import { Color, Palette } from "@/types";
 import { savePalette, loadPalettes, deletePalette } from "@/lib/storage";
 
@@ -17,15 +17,9 @@ export default function Home() {
   }>({});
   const [palettes, setPalettes] = useState<Palette[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [toast, setToast] = useState({ message: "", visible: false });
 
   useEffect(() => {
     setPalettes(loadPalettes());
-  }, []);
-
-  const showToast = useCallback((message: string) => {
-    setToast({ message, visible: true });
-    setTimeout(() => setToast({ message: "", visible: false }), 2000);
   }, []);
 
   async function handleGenerate(params: {
@@ -35,20 +29,20 @@ export default function Home() {
     setIsLoading(true);
     setCurrentParams(params);
     try {
-      const res = await fetch("/api/generate", {
+      const res = await fetch("/api/generate-v2", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(params),
       });
       if (!res.ok) {
         const err = await res.json();
-        showToast(err.error || "生成に失敗しました");
+        toast.error(err.error || "生成に失敗しました");
         return;
       }
       const data = await res.json();
       setColors(data.colors);
     } catch {
-      showToast("ネットワークエラーが発生しました");
+      toast.error("ネットワークエラーが発生しました");
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +59,7 @@ export default function Home() {
     };
     savePalette(palette);
     setPalettes(loadPalettes());
-    showToast("パレットを保存しました！");
+    toast.success("パレットを保存しました");
   }
 
   function handleDelete(id: string) {
@@ -75,22 +69,36 @@ export default function Home() {
 
   function handleCopy(hex: string) {
     navigator.clipboard.writeText(hex);
-    showToast(`${hex} をコピーしました！`);
+    toast(`${hex} をコピーしました`);
+  }
+
+  function handleLoad(palette: Palette) {
+    setColors(palette.colors);
+    setCurrentParams({
+      keyword: palette.keyword,
+      baseColor: palette.baseColor,
+    });
+    toast("パレットを読み込みました");
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
-      <main className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-6">
-        <InputArea onGenerate={handleGenerate} isLoading={isLoading} />
-        <ResultArea colors={colors} onCopy={handleCopy} onSave={handleSave} />
-        <HistoryArea
+      <HeaderV2 />
+      <main className="max-w-3xl mx-auto px-4 py-8 flex flex-col gap-5">
+        <InputAreaV2 onGenerate={handleGenerate} isLoading={isLoading} />
+        <ResultAreaV2
+          colors={colors}
+          onCopy={handleCopy}
+          onSave={handleSave}
+          onToast={(msg) => toast(msg)}
+        />
+        <HistoryAreaV2
           palettes={palettes}
           onDelete={handleDelete}
           onCopy={handleCopy}
+          onLoad={handleLoad}
         />
       </main>
-      <Toast message={toast.message} visible={toast.visible} />
     </div>
   );
 }

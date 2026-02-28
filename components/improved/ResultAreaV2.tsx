@@ -1,8 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { Color } from "@/types";
 import ColorSwatchV2 from "./ColorSwatchV2";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type Props = {
   colors: Color[];
@@ -28,7 +34,6 @@ function toTailwindConfig(colors: Color[]): string {
 const DEMO_HEXES = ["#312e81", "#4338ca", "#6366f1", "#a5b4fc", "#eef2ff"];
 
 export default function ResultAreaV2({ colors, onCopy, onSave, onToast }: Props) {
-  const [exportOpen, setExportOpen] = useState(false);
 
   if (colors.length === 0) {
     return (
@@ -64,56 +69,34 @@ export default function ResultAreaV2({ colors, onCopy, onSave, onToast }: Props)
           生成されたパレット
         </p>
         <div className="flex items-center gap-2">
-          {/* Export dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setExportOpen((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              書き出し
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-                <path d="M5 7 L1 2 L9 2 Z" />
-              </svg>
-            </button>
-            {exportOpen && (
-              <>
-                {/* Backdrop */}
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setExportOpen(false)}
-                />
-                <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg py-1.5 z-20 min-w-[180px]">
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(toCSSVars(colors));
-                      setExportOpen(false);
-                      onToast("CSS カスタムプロパティをコピーしました");
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    CSS カスタムプロパティ
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(toTailwindConfig(colors));
-                      setExportOpen(false);
-                      onToast("Tailwind 設定をコピーしました");
-                    }}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    Tailwind config
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-          <button
-            onClick={onSave}
-            className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-medium hover:bg-indigo-700 transition-colors"
-          >
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 text-xs rounded-lg">
+                書き出し
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-45">
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(toCSSVars(colors));
+                  onToast("CSS カスタムプロパティをコピーしました");
+                }}
+              >
+                CSS カスタムプロパティ
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(toTailwindConfig(colors));
+                  onToast("Tailwind 設定をコピーしました");
+                }}
+              >
+                Tailwind config
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button size="sm" className="h-8 text-xs rounded-lg" onClick={onSave}>
             保存
-          </button>
+          </Button>
         </div>
       </div>
 
